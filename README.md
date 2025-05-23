@@ -95,10 +95,10 @@ python mot16_to_yolo.py --resize 640 640 --preserve-sequence
 
 ```bash
 # Fine-tune mô hình YOLOv9-C
-python train_modified.py --device cpu --batch 1 --epochs 50 --data data_mot16/mot16.yaml --cfg models/detect/yolov9-c.yaml --weights weights/yolov9-c.pt --name yolov9-c-MOT16 --hyp data/hyps/hyp.scratch-high.yaml --exist-ok
+python train_modified.py --device cpu --batch 1 --epochs 50 --data data_mot16/mot16.yaml --cfg models/detect/yolov9-c.yaml --weights weights/yolov9-c.pt --name best --hyp data/hyps/hyp.scratch-high.yaml --exist-ok
 
 # Hoặc sử dụng mô hình nhẹ hơn nếu CPU yếu
-python train_modified.py --device cpu --batch 2 --epochs 50 --data data_mot16/mot16.yaml --cfg models/detect/yolov9-s.yaml --weights weights/yolov9-s.pt --name yolov9-s-MOT16 --hyp data/hyps/hyp.scratch-high.yaml --exist-ok
+python train_modified.py --device cpu --batch 2 --epochs 50 --data data_mot16/mot16.yaml --cfg models/detect/yolov9-s.yaml --weights weights/yolov9-s.pt --name best --hyp data/hyps/hyp.scratch-high.yaml --exist-ok
 ```
 
 ### 4. Tracking người đi bộ trong video
