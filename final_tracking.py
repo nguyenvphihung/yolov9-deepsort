@@ -5,7 +5,7 @@ from deep_sort_realtime.deepsort_tracker import DeepSort
 from models.common import DetectMultiBackend, AutoShape
 
 # Config value
-video_path = "data_ext/students.mp4"
+video_path = "data_ext/test1.MOV"
 conf_threshold = 0.5
 tracking_class = 0
 
@@ -14,7 +14,7 @@ tracker = DeepSort(max_age=30)
 
 # Khởi tạo YOLOv9
 device = "cpu" # "cuda": GPU, "cpu": CPU, "mps:0"
-model  = DetectMultiBackend(weights="weights/yolov9-c.pt", device=device, fuse=True )
+model  = DetectMultiBackend(weights="weights/best.pt", device=device, fuse=True )
 model  = AutoShape(model)
 
 # Load classname từ file classes.names
@@ -26,6 +26,22 @@ tracks = []
 
 # Khởi tạo VideoCapture để đọc từ file video
 cap = cv2.VideoCapture(video_path)
+
+# Lấy kích thước video
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fps = cap.get(cv2.CAP_PROP_FPS)
+
+# Tính toán tỷ lệ resize để hiển thị phù hợp
+max_display_width = 1920 # Độ rộng tối đa để hiển thị
+max_display_height = 1080  # Độ cao tối đa để hiển thị
+scale = min(max_display_width / width, max_display_height / height)
+
+# Kích thước mới để hiển thị
+display_width = int(width * scale)
+display_height = int(height * scale)
+
+print(f"Video original size: {width}x{height}, Display size: {display_width}x{display_height}")
 
 # Tiến hành đọc từng frame từ video
 while True:
@@ -73,8 +89,11 @@ while True:
             cv2.rectangle(frame, (x1 - 1, y1 - 20), (x1 + len(label) * 12, y1), (B, G, R), -1)
             cv2.putText(frame, label, (x1 + 5, y1 - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
+    # Resize frame trước khi hiển thị để phù hợp với màn hình
+    display_frame = cv2.resize(frame, (display_width, display_height))
+    
     # Show hình ảnh lên màn hình
-    cv2.imshow("OT", frame)
+    cv2.imshow("OT", display_frame)
     # Bấm Q thì thoát
     key = cv2.waitKey(1)
     if key == ord("q") or key == 27:  
