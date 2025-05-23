@@ -59,7 +59,7 @@ Quá trình fine-tuning bao gồm:
 Lệnh huấn luyện:
 
 ```bash
-python train_modified.py --device cpu --batch 1 --epochs 50 --data data_mot16/mot16.yaml --cfg models/detect/yolov9-c.yaml --weights weights/yolov9-c.pt --name yolov9-c-MOT16 --hyp data/hyps/hyp.scratch-high.yaml --exist-ok
+python train_modified.py --device cpu --batch 1 --epochs 50 --data data_mot16/mot16.yaml --cfg models/detect/yolov9-c.yaml --weights weights/yolov9-c.pt --name best --hyp data/hyps/hyp.scratch-high.yaml --exist-ok
 ```
 
 ### 3. Lợi ích của Fine-tuning
