@@ -56,21 +56,13 @@ Quá trình fine-tuning bao gồm:
 3. **Huấn luyện có điều chỉnh**: Giữ nguyên các đặc trưng cấp thấp (edges, textures), chỉ điều chỉnh các lớp cao hơn để tối ưu cho việc phát hiện người đi bộ
 4. **Lưu mô hình tốt nhất**: File `best.pt` chứa mô hình có hiệu suất tốt nhất trên tập validation
 
-Lệnh huấn luyện:
-
-```bash
-python train_modified.py --device cpu --batch 1 --epochs 50 --data data_mot16/mot16.yaml --cfg models/detect/yolov9-c.yaml --weights weights/yolov9-c.pt --name best --hyp data/hyps/hyp.scratch-high.yaml --exist-ok
-```
-
-### 3. Lợi ích của Fine-tuning
-
-- **Hiệu suất tốt hơn**: Mô hình fine-tuned phát hiện người đi bộ chính xác hơn mô hình chung
-- **Tiết kiệm thời gian**: Không cần huấn luyện từ đầu với dữ liệu hạn chế
-- **Đảm bảo tổng quát hóa**: Mô hình giữ lại kiến thức nền về các đặc trưng hình ảnh từ dữ liệu lớn COCO
-
 ## Hướng dẫn sử dụng
 
-### 1. Chuẩn bị môi trường
+### 1. Chuẩn bị tài nguyên & môi trường
+
+- **Tạo thư mục data_ext trong dự án, tải bộ dữ liệu MOT16 và chuyển vào đây(data_ext/MOT16/train...)**
+- **Tải mẫu file classes.name của YOLO và chuyển vào thư mục data_ext(data_ext/classes.name)**
+- **Đưa video cần tracking vào thư mục data_ext(data_ext/example.mp4)**
 
 ```bash
 # Tạo môi trường
@@ -81,7 +73,7 @@ pip install -r setup.txt
 # Tạo thư mục weights và tải YOLOv9-C về
 ```
 
-### 2. Chuyển đổi dữ liệu (nếu cần)
+### 2. Chuyển đổi dữ liệu (nếu chưa chuyển)
 
 ```bash
 # Chuyển đổi MOT16 sang format YOLO
@@ -105,11 +97,19 @@ python train_modified.py --device cpu --batch 2 --epochs 50 --data data_mot16/mo
 
 ```bash
 # Sử dụng mô hình đã fine-tune để tracking
-python object_tracking.py --source path/to/your/video.mp4 --weights runs/train/yolov9-c-MOT16/weights/best.pt --output output/result.mp4
+python final_tracking.py
+```
+### 5. Xem đánh giá mô hình
+
+```bash
+# Độ chính xác trên toàn bộ tập train
+python evaluate_all.py --weights weights/best.pt --data data_ext/MOT16/train
+
+# Độ chính xác trên 1 sequence cụ thể(ví dụ seq MOT16-02)
+python evaluate_model.py --sequence MOT16-02 --weights weights/best.pt --data data_ext/MOT16/train
 ```
 
 ## Kết quả
-
 Sau khi fine-tune YOLOv9 trên MOT16 và kết hợp với DeepSORT, hệ thống tracking đạt hiệu suất ổn định với:
 
 - **Độ chính xác phát hiện người khá hiệu quả**

@@ -1,8 +1,18 @@
 import cv2
 import torch
 import numpy as np
+import os
+import csv
 from deep_sort_realtime.deepsort_tracker import DeepSort
 from models.common import DetectMultiBackend, AutoShape
+from datetime import datetime
+
+# Tạo thư mục outputs nếu chưa tồn tại
+os.makedirs('outputs', exist_ok=True)
+
+# Tạo tên file CSV với timestamp
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+csv_path = os.path.join('outputs', f'tracking_results_{timestamp}.csv')
 
 # Config value
 video_path = "data_ext/test1.MOV"
